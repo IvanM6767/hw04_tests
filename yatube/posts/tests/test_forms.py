@@ -105,11 +105,10 @@ class PostFormTests(TestCase):
             reverse('posts:post_edit', args=[self.post.id]),
             data=form_data,
             follow=True)
-        modified_post = Post.objects.get(id=self.post.id)
         self.assertRedirects(response, reverse(
             'posts:post_detail', kwargs={'post_id': self.post.id}))
         self.assertEqual(Post.objects.count(), posts_count)
-        
+
     def test_create_post_not_authorized(self):
         """Тестирование невозможности создания поста гостем"""
         post_count = Post.objects.count()
