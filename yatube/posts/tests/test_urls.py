@@ -46,10 +46,6 @@ class StaticURLTests(TestCase):
         self.authorized_client_author = Client()
         self.authorized_client_author.force_login(self.author)
 
-    def test_homepage(self):
-        response = self.guest_client.get('/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
     def test_urls_guest(self):
         """Страницы недоступны неавторизованному юзеру"""
         for address, template in self.template_url_names.items():

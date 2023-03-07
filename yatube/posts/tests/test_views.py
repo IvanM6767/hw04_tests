@@ -22,6 +22,21 @@ class PostViewTests(TestCase):
             title='Группа_2',
             slug='group_2'
         )
+        cls.post_1 = Post.objects.create(
+            text='test_text_1',
+            author=cls.author_1,
+            group=cls.group_1
+        )
+        cls.post_2 = Post.objects.create(
+            text='test_text_2',
+            author=cls.author_2,
+            group=None
+        )
+        cls.post_3 = Post.objects.create(
+            text='test_text_3',
+            author=cls.author_1,
+            group=cls.group_2
+        )
 
     def setUp(self):
         """Создаем авторизованных клиентов и несколько постов."""
@@ -29,21 +44,6 @@ class PostViewTests(TestCase):
         self.authorized_client_1.force_login(self.author_1)
         self.authorized_client_2 = Client()
         self.authorized_client_2.force_login(self.author_2)
-        self.post_1 = Post.objects.create(
-            text='test_text_1',
-            author=self.author_1,
-            group=self.group_1
-        )
-        self.post_2 = Post.objects.create(
-            text='test_text_2',
-            author=self.author_2,
-            group=None
-        )
-        self.post_3 = Post.objects.create(
-            text='test_text_3',
-            author=self.author_1,
-            group=self.group_2
-        )
 
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
@@ -180,17 +180,16 @@ class PaginatorViewsTest(TestCase):
             title='Тестовая группа',
             slug='group_test'
         )
+        for i in range(15):
+            cls = Post.objects.create(
+                text=f'test_text_{i}',
+                author=cls.author,
+                group=cls.group)
 
     def setUp(self):
         """Создаем клиента и 15 постов."""
         self.client = Client()
         self.number_create_posts = 15
-        posts = []
-        for i in range(self.number_create_posts):
-            posts.append(Post.objects.create(
-                text=f'test_text_{i}',
-                author=self.author,
-                group=self.group))
 
     def test_index_page(self):
         """Проверяет пагинацию главной страницы."""
