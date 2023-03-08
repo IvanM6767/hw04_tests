@@ -80,22 +80,14 @@ class PostFormTests(TestCase):
             reverse('posts:post_edit', args=[self.post.id]),
             data=form_data,
             follow=True)
-        modified_post = Post.objects.get(id=self.post.id)
-        self.assertRedirects(response, reverse(
-            'posts:post_detail', kwargs={'post_id': self.post.id}))
+        edit_post_var = Post.objects.get(id=self.post.id)
+        self.assertRedirects(response, reverse('posts:post_detail',
+                             kwargs={'post_id': self.post.id}))
         self.assertEqual(Post.objects.count(), posts_count)
-        self.assertNotEqual(
-            modified_post.text,
-            self.post.text,
-            'Текст поста не изменился!'
-        )
-        self.assertNotEqual(
-            modified_post.group,
-            self.post.group,
-            'Группа у поста не изменилась!'
-        )
+        self.assertEqual(edit_post_var.text, form_data['text'])
+        self.assertEqual(edit_post_var.author, self.post.author)
 
-    def test_edit_post_form_2(self):
+    def test_edit_post_form_secclient(self):
         posts_count = Post.objects.count()
         form_data = {
             'text': 'Измененный текст поста',
@@ -110,7 +102,7 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
 
     def test_create_post_not_authorized(self):
-        """Тестирование невозможности создания поста гостем"""
+        """Тестирование редактирования поста пользователем"""
         post_count = Post.objects.count()
         form_data = {
             'group': self.group_1.id,

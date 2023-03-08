@@ -181,7 +181,7 @@ class PaginatorViewsTest(TestCase):
             slug='group_test'
         )
         for i in range(15):
-            cls = Post.objects.create(
+            cls.post = Post.objects.create(
                 text=f'test_text_{i}',
                 author=cls.author,
                 group=cls.group)
