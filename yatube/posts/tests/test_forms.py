@@ -113,7 +113,7 @@ class PostFormTests(TestCase):
             'text': 'Тестовый текст',
         }
         # Убедился что пост один в базе, до создания еще одного.
-        self.assertEqual(Post.objects.count(), 1)
+        self.assertEqual(Post.objects.count())
         response = self.client.post(
             reverse('posts:post_create'), data=form_data
         )
