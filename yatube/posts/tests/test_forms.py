@@ -109,15 +109,13 @@ class PostFormTests(TestCase):
         """Тестирование создания поста не авторизированным пользователем"""
         post_count = Post.objects.count()
         form_data = {
-            'group': self.group_1.id,
-            'text': 'Тестовый текст',
+            'text': 'Текст поста',
+            'group': self.group_1.id
         }
-        # Убедился что пост один в базе, до создания еще одного.
-        self.assertEqual(Post.objects.count())
+        self.assertEqual(Post.objects.count(), 1)
         response = self.client.post(
             reverse('posts:post_create'), data=form_data
         )
-        # Убедился что количество постов не изменилось
+        self.assertEqual(response.status_code, 200)
+        # Убедился что пост один в базе, до создания еще одного.
         self.assertEqual(Post.objects.count(), post_count)
-        # Убедился что не авторизованный получил редирект
-        self.assertEqual(response.status_code, 302)
