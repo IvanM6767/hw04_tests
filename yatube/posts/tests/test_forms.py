@@ -6,7 +6,7 @@ from ..models import Group, Post, User
 class PostFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
-        """Создаем автора и две группы."""
+        """Создаем 2 автора и две группы."""
         super().setUpClass()
         cls.author = User.objects.create_user(username='author')
         cls.author_3 = User.objects.create_user(username='author_3')
@@ -31,7 +31,7 @@ class PostFormTests(TestCase):
         )
 
     def setUp(self):
-        """Создаем клиента и пост."""
+        """Создаем 2 клиента."""
         self.authorized_client = Client()
         self.authorized_client.force_login(self.author)
         self.authorized_client_3 = Client()
@@ -102,11 +102,20 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
         edit_post_var = Post.objects.get(id=self.post.id)
         self.assertNotEqual(edit_post_var.text, form_data['text'])
+        self.assertNotEqual(edit_post_var.author, self.post.author)
+        self.assertEqual(edit_post_var.group, form_data['group'])
 
     def test_create_post_not_authorized(self):
-        """Тестирование создания поста пользователем"""
-        post_count = Post.objects.count()
+        """Тестирование создания поста не авторизированным пользователем"""
+        post_count = Post.objects.all().count()
+        form_data = {
+            'text': 'Текст поста',
+            'group': self.group_1.id
+        }
+        response = self.client.post(
+            reverse('posts:post_edit', args=[self.post.id]),
+            data=form_data,
+            follow=True)
+        self.assertEqual(response.status_code, 200)
         # Убедился что пост один в базе, до создания еще одного.
-        self.assertEqual(Post.objects.count(), post_count)
-        # Убедился что количество постов не изменилось
         self.assertEqual(Post.objects.count(), post_count)
