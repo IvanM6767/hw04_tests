@@ -113,7 +113,7 @@ class PostFormTests(TestCase):
             'group': self.group_1.id
         }
         response = self.client.post(
-            reverse('posts:post_edit', args=[self.post.id]),
+            reverse('posts:post_create', args=[self.post.id]),
             data=form_data,
             follow=True)
         self.assertEqual(response.status_code, 200)
