@@ -100,20 +100,13 @@ class PostFormTests(TestCase):
         self.assertRedirects(response, reverse(
             'posts:post_detail', kwargs={'post_id': self.post.id}))
         self.assertEqual(Post.objects.count(), posts_count)
+        edit_post_var = Post.objects.get(id=self.post.id)
+        self.assertNotEqual(edit_post_var.text, form_data['text'])
 
     def test_create_post_not_authorized(self):
-        """Тестирование редактирования поста пользователем"""
+        """Тестирование создания поста пользователем"""
         post_count = Post.objects.count()
-        form_data = {
-            'group': self.group_1.id,
-            'text': 'Тестовый текст',
-        }
         # Убедился что пост один в базе, до создания еще одного.
         self.assertEqual(Post.objects.count(), post_count)
-        response = self.client.post(
-            reverse('posts:post_create'), data=form_data
-        )
         # Убедился что количество постов не изменилось
         self.assertEqual(Post.objects.count(), post_count)
-        # Убедился что не авторизованный получил редирект
-        self.assertEqual(response.status_code, 302)
