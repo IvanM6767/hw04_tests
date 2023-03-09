@@ -102,7 +102,7 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count)
         edit_post_var = Post.objects.get(id=self.post.id)
         self.assertNotEqual(edit_post_var.text, form_data['text'])
-        self.assertNotEqual(edit_post_var.author, self.post.author)
+        self.assertEqual(edit_post_var.author, self.post.author)
         self.assertEqual(edit_post_var.group, form_data['group'])
 
     def test_create_post_not_authorized(self):
