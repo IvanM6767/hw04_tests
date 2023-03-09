@@ -107,7 +107,7 @@ class PostFormTests(TestCase):
 
     def test_create_post_not_authorized(self):
         """Тестирование создания поста не авторизированным пользователем"""
-        post_count = Post.objects.all().count()
+        post_count = Post.objects.count()
         form_data = {
             'text': 'Текст поста',
             'group': self.group_1.id
